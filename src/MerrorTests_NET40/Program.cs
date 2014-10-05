@@ -1,4 +1,4 @@
-﻿using NUnit.Gui;
+﻿//using NUnit.Gui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,10 @@ namespace Oika.Libs.MerrorTests
         [STAThread]
         static void Main(string[] args)
         {
-            AppEntry.Main(new[] { Application.ExecutablePath, "/run" });
+            //※nunit-gui-runner.dllへの参照を追加し、以下の行を有効にすることで
+            //  実行ファイルから直接テストを起動できるようになります。
+            
+            //AppEntry.Main(new[] { Application.ExecutablePath, "/run" });
         }
     }
 }
