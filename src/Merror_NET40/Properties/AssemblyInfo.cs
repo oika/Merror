@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
 [assembly: AssemblyTitle("Merror")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Reflectionメソッド群のシンプルなラッパーライブラリです。")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("oika.me")]
 [assembly: AssemblyProduct("Merror")]
 [assembly: AssemblyCopyright("Copyright © oika 2014")]
 [assembly: AssemblyTrademark("")]
