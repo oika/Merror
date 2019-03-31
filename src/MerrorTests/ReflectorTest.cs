@@ -81,6 +81,18 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
+        public void FindStaticFieldIfInstanceIsNull()
+        {
+            var reflector = new Reflector(typeof(FieldTestTarget));
+            FieldTestTarget.SetStaticText("hoge");
+
+            Assert.AreEqual("hoge", reflector.GetField(null, "text"));
+            reflector.SetField(null, "text", "あああ");
+
+            Assert.AreEqual("あああ", reflector.GetStaticField("text"));
+        }
+
+        [Test]
         public void TestInstanceField()
         {
             var reflector = new Reflector(typeof(FieldTestTarget));
@@ -152,6 +164,19 @@ namespace Oika.Libs.MerrorTests
             Assert.AreEqual("hoge", reflector.GetStaticProperty("Text"));
 
             reflector.SetStaticProperty("Text", "あああ");
+
+            Assert.AreEqual("あああ", reflector.GetStaticProperty("Text"));
+        }
+
+        [Test]
+        public void FindStaticPropertyIfInstanceIsNull()
+        {
+            var reflector = new Reflector(typeof(PropertyTestTarget));
+            PropertyTestTarget.SetStaticText("hoge");
+
+            Assert.AreEqual("hoge", reflector.GetProperty(null, "Text"));
+
+            reflector.SetProperty(null, "Text", "あああ");
 
             Assert.AreEqual("あああ", reflector.GetStaticProperty("Text"));
         }

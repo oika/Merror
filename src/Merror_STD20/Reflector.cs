@@ -182,7 +182,7 @@ namespace Oika.Libs.Merror
         /// <exception cref="System.MemberAccessException"></exception>
         public void SetField(object instance, string name, object value)
         {
-            _GetFieldInfo(name, false).SetValue(instance, value);
+            _GetFieldInfo(name, instance == null).SetValue(instance, value);
         }
         /// <summary>
         /// Gets value from a field.
@@ -193,7 +193,7 @@ namespace Oika.Libs.Merror
         /// <exception cref="System.MemberAccessException"></exception>
         public object GetField(object instance, string name)
         {
-            return _GetFieldInfo(name, false).GetValue(instance);
+            return _GetFieldInfo(name, instance == null).GetValue(instance);
         }
         /// <summary>
         /// Sets value to a property.
@@ -204,7 +204,7 @@ namespace Oika.Libs.Merror
         /// <exception cref="System.MemberAccessException"></exception>
         public void SetProperty(object instance, string name, object value)
         {
-            _GetPropInfo(name, false).SetValue(instance, value, null);
+            _GetPropInfo(name, instance == null).SetValue(instance, value, null);
         }
         /// <summary>
         /// Gets value from a property.
@@ -215,7 +215,7 @@ namespace Oika.Libs.Merror
         /// <exception cref="System.MemberAccessException"></exception>
         public object GetProperty(object instance, string name)
         {
-            return _GetPropInfo(name, false).GetValue(instance, null);
+            return _GetPropInfo(name, instance == null).GetValue(instance, null);
         }
         /// <summary>
         /// Calls a method and returns value.
@@ -239,7 +239,7 @@ namespace Oika.Libs.Merror
         /// <exception cref="System.MemberAccessException"></exception>
         public object InvokeExact(object instance, string name, params ReflectorParam[] args)
         {
-            var info = _GetMethodInfo(name, args.Select(a => a.Type).ToArray(), false);
+            var info = _GetMethodInfo(name, args.Select(a => a.Type).ToArray(), instance == null);
 
             var argVals = args.Select(a => a.Value).ToArray();
             var rtn = info.Invoke(instance, argVals);
