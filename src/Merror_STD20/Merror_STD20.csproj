@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Oika.Libs.Merror</AssemblyName>
+    <RootNamespace>Oika.Libs.Merror</RootNamespace>
+    <Copyright>oika</Copyright>
+    <Version>1.0.1</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>oika</Authors>
+    <PackageProjectUrl>https://github.com/oika/Merror</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/oika/Merror</RepositoryUrl>
+    <PackageTags>C# Reflection</PackageTags>
+    <Description>An simple wrapper of Reflection methods.</Description>
+  </PropertyGroup>
+
+</Project>
