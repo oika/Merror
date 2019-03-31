@@ -2,9 +2,6 @@
 using Oika.Libs.Merror;
 using FooCompany.BarTeam.MerrorTestsTarget;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Oika.Libs.MerrorTests
 {
@@ -14,10 +11,10 @@ namespace Oika.Libs.MerrorTests
 
         const string NSName = "FooCompany.BarTeam.MerrorTestsTarget";
 
-        #region コンストラクタテスト
+        #region Test Constructors
 
         [Test]
-        public void プライベートコンストラクタでインスタンスを生成する()
+        public void TestPrivateConstructor()
         {
 
             var refObj = new Reflector(NSName + ".NewInstanceTarget", typeof(IndexerTestTarget));
@@ -27,7 +24,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void 厳密に型指定されたコンストラクタでインスタンスを生成する()
+        public void TestExactConstructor()
         {
             var refObj = new Reflector(NSName + ".NewInstanceTarget", typeof(IndexerTestTarget));
             var obj = refObj.NewInstanceExact(ReflectorParam.New<string>(null));
@@ -36,7 +33,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void refパラメータのあるコンストラクタでインスタンスを生成する()
+        public void TestConstructorWithRefParam()
         {
             var refObj = new Reflector(NSName + ".NewInstanceTarget", typeof(IndexerTestTarget));
 
@@ -48,10 +45,10 @@ namespace Oika.Libs.MerrorTests
 
         #endregion
 
-        #region フィールドテスト
+        #region Test Fields
 
         [Test]
-        public void staticフィールドにアクセスする()
+        public void TestStaticField()
         {
             var reflector = new Reflector(typeof(FieldTestTarget));
             var obj = new FieldTestTarget(0, "hoge");
@@ -64,7 +61,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void インスタンスフィールドにアクセスする()
+        public void TestInstanceField()
         {
             var reflector = new Reflector(typeof(FieldTestTarget));
             var obj = new FieldTestTarget(3333, null);
@@ -77,7 +74,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void フィールドの型が違う場合に例外を投げる()
+        public void ThrowIfFieldTypeUnmatch()
         {
             var reflector = new Reflector(typeof(FieldTestTarget));
             var obj = new FieldTestTarget(123, "");
@@ -95,7 +92,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void フィールドが見つからない場合に例外を投げる()
+        public void ThrowIfFieldNotFound()
         {
             var reflector = new Reflector(typeof(FieldTestTarget));
             var obj = new FieldTestTarget(123, "");
@@ -124,10 +121,10 @@ namespace Oika.Libs.MerrorTests
 
         #endregion
 
-        #region プロパティテスト
+        #region Test Properties
 
         [Test]
-        public void staticプロパティにアクセスする()
+        public void TestStaticProperty()
         {
             var reflector = new Reflector(typeof(PropertyTestTarget));
             var obj = new PropertyTestTarget(0, "hoge");
@@ -140,7 +137,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void インスタンスプロパティにアクセスする()
+        public void TestInstanceProperty()
         {
             var reflector = new Reflector(typeof(PropertyTestTarget));
             var obj = new PropertyTestTarget(3333, null);
@@ -153,7 +150,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void プロパティの型が違う場合に例外を投げる()
+        public void ThrowIfPropertyTypeUnmatch()
         {
             var reflector = new Reflector(typeof(PropertyTestTarget));
             var obj = new PropertyTestTarget(123, "");
@@ -171,7 +168,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void プロパティが見つからない場合に例外を投げる()
+        public void TestIfPropertyNotFound()
         {
             var reflector = new Reflector(typeof(PropertyTestTarget));
             var obj = new PropertyTestTarget(123, "");
@@ -200,10 +197,10 @@ namespace Oika.Libs.MerrorTests
 
         #endregion
 
-        #region インデクサテスト
+        #region Test Indexers
 
         [Test]
-        public void 引数1つのインデクサにアクセスする()
+        public void TestIndexerWithOneParam()
         {
             var refObj = new Reflector(typeof(IndexerTestTarget));
             var obj = new IndexerTestTarget();
@@ -223,7 +220,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void 引数2つのインデクサにアクセスする()
+        public void TestIndexerWithTwoParams()
         {
             var refObj = new Reflector(typeof(IndexerTestTarget));
             var obj = new IndexerTestTarget();
@@ -244,10 +241,10 @@ namespace Oika.Libs.MerrorTests
 
         #endregion
 
-        #region メソッドテスト
+        #region Test Methods
 
         [Test]
-        public void staticメソッドにアクセスする()
+        public void TestStaticMethod()
         {
             var reflector = new Reflector(typeof(MethodTestTarget));
             var res = reflector.InvokeStatic("StaticSum", 10, 20);
@@ -256,7 +253,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void インスタンスメソッドにアクセスする()
+        public void TestInstanceMethod()
         {
             var reflector = new Reflector(typeof(MethodTestTarget));
             var obj = new MethodTestTarget(4);
@@ -267,7 +264,7 @@ namespace Oika.Libs.MerrorTests
         }
 
         [Test]
-        public void outパラメータを持つメソッドにアクセスする()
+        public void TestMethodWithOutParam()
         {
             var reflector = new Reflector(typeof(MethodTestTarget));
 

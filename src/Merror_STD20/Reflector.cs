@@ -1,41 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Oika.Libs.Merror
 {
     /// <summary>
-    /// リフレクションを使用した、クラスメンバへのアクセス機能を提供するクラスです。
+    /// Provides functions to access public/non-public members of public/non-public classes, using Reflection.
     /// </summary>
     public class Reflector
     {
-        /// <summary>
-        /// staticメンバ検索用フラグ
-        /// </summary>
         static readonly BindingFlags StaticFlags
                     = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
-        /// <summary>
-        /// インスタンスメンバ検索用フラグ
-        /// </summary>
+
         static readonly BindingFlags InstanceFlags
                     = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-        /// <summary>
-        /// 対象の型
-        /// </summary>
         readonly Type trgType;
 
-        #region コンストラクタ
+        #region Constructor
 
         /// <summary>
-        /// コンストラクタです。
+        /// Creates new Reflector instance with the type info.
         /// </summary>
-        /// <param name="targetType">アクセス対象の型を指定します。
-        /// アクセス対象の型が非公開の場合は、
-        /// 型名とアセンブリ情報をパラメータにとるオーバーロードを使用します。
+        /// <param name="targetType">Type of the target object.
+        /// Use overload with the type name and the assembly info instead if the target class isn't public.
         /// </param>
         public Reflector(Type targetType)
         {
@@ -43,25 +31,24 @@ namespace Oika.Libs.Merror
         }
 
         /// <summary>
-        /// コンストラクタです。
+        /// Creates new Reflector instance with the type name and another type in the same assembly.
         /// </summary>
-        /// <param name="typeFullName">アクセス対象の型の名称を名前空間を含めて指定します。</param>
-        /// <param name="anotherTypeInAssembly">アクセス対象の型を含むアセンブリ内の
-        /// 任意の公開型を指定します。
-        /// この値はアセンブリ特定のために使用されます。
+        /// <param name="typeFullName">Full name of the target class, includes namespace.</param>
+        /// <param name="anotherTypeInAssembly">An public type in the target assembly.
+        /// This is used to identify the assembly.
         /// </param>
-        /// <exception cref="System.TypeLoadException">指定された型が見つからない場合にスローされます。</exception>
+        /// <exception cref="System.TypeLoadException">Thrown when the target type is not found.</exception>
         public Reflector(string typeFullName, Type anotherTypeInAssembly)
             : this(typeFullName, Assembly.GetAssembly(anotherTypeInAssembly))
         {
         }
 
         /// <summary>
-        /// コンストラクタです。
+        /// Creates new Reflector instance with the type name and the assembly info.
         /// </summary>
-        /// <param name="typeFullName">アクセス対象の型の名称を名前空間を含めて指定します。</param>
-        /// <param name="targetAssembly">アクセス対象の型を含むアセンブリを指定します。</param>
-        /// <exception cref="System.TypeLoadException">指定された型が見つからない場合にスローされます。</exception>
+        /// <param name="typeFullName">Full name of the target class, includes namespace.</param>
+        /// <param name="targetAssembly">The assembly which contains target class.</param>
+        /// <exception cref="System.TypeLoadException">Thrown when the target type is not found.</exception>
         public Reflector(string typeFullName, Assembly targetAssembly)
             : this(targetAssembly.GetType(typeFullName, true, false))
         {
@@ -69,27 +56,25 @@ namespace Oika.Libs.Merror
 
         #endregion
 
-        #region インスタンス生成
+        #region Create instance
 
         /// <summary>
-        /// 指定されたパラメータに一致するコンストラクタを使って
-        /// 対象の型のインスタンスを生成します。
+        /// Creates an instance of the target class using the constructor which matches with the passed parameters.
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        /// <exception cref="System.MemberAccessException"></exception>
+        /// <exception cref="System.MemberAccessException">Thrown when the constructor is not found.</exception>
         public object NewInstance(params object[] args)
         {
             return NewInstanceExact(args.Select(a => new ReflectorParam(a)).ToArray());
         }
 
         /// <summary>
-        /// 厳密に指定されたパラメータ情報に一致するコンストラクタを使って
-        /// 対象の型のインスタンスを生成します。
+        /// Creates an instance of the target class using the constructor which matches with the strictly specified parameters.
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        /// <exception cref="System.MemberAccessException"></exception>
+        /// <exception cref="System.MemberAccessException">Thrown when the constructor is not found.</exception>
         public object NewInstanceExact(params ReflectorParam[] args)
         {
             var cnst = trgType.GetConstructor(InstanceFlags, null, args.Select(a => a.Type).ToArray(), null);
@@ -108,10 +93,10 @@ namespace Oika.Libs.Merror
 
         #endregion
 
-        #region 静的メンバアクセス
+        #region Access to static members
 
         /// <summary>
-        /// 静的フィールドに値を設定します。
+        /// Sets value to a static field.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
@@ -121,7 +106,7 @@ namespace Oika.Libs.Merror
             _GetFieldInfo(name, true).SetValue(null, value);
         }
         /// <summary>
-        /// 静的フィールドの値を取得します。
+        /// Gets value from a static field.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -131,7 +116,7 @@ namespace Oika.Libs.Merror
             return _GetFieldInfo(name, true).GetValue(null);
         }
         /// <summary>
-        /// 静的プロパティに値を設定します。
+        /// Sets value to a static property.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
@@ -141,7 +126,7 @@ namespace Oika.Libs.Merror
             _GetPropInfo(name, true).SetValue(null, value, null);
         }
         /// <summary>
-        /// 静的プロパティの値を取得します。
+        /// Gets value from a static property.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -151,7 +136,7 @@ namespace Oika.Libs.Merror
             return _GetPropInfo(name, true).GetValue(null, null);
         }
         /// <summary>
-        /// 静的メソッドを実行し、戻り値を返します。
+        /// Calls a static method and returns value.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="args"></param>
@@ -162,7 +147,7 @@ namespace Oika.Libs.Merror
             return InvokeStaticExact(name, args.Select(a => new ReflectorParam(a)).ToArray());
         }
         /// <summary>
-        /// 厳密に指定されたパラメータ情報に一致する静的メソッドを実行し、戻り値を返します。
+        /// Calls a static method with strictly specified parameters and returns value.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="args"></param>
@@ -185,10 +170,10 @@ namespace Oika.Libs.Merror
 
         #endregion
 
-        #region インスタンスメンバアクセス
+        #region Access to instance members
 
         /// <summary>
-        /// インスタンスフィールドに値を設定します。
+        /// Sets value to a field.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="name"></param>
@@ -199,7 +184,7 @@ namespace Oika.Libs.Merror
             _GetFieldInfo(name, false).SetValue(instance, value);
         }
         /// <summary>
-        /// インスタンスフィールドの値を取得します。
+        /// Gets value from a field.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="name"></param>
@@ -210,7 +195,7 @@ namespace Oika.Libs.Merror
             return _GetFieldInfo(name, false).GetValue(instance);
         }
         /// <summary>
-        /// インスタンスプロパティに値を設定します。
+        /// Sets value to a property.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="name"></param>
@@ -221,7 +206,7 @@ namespace Oika.Libs.Merror
             _GetPropInfo(name, false).SetValue(instance, value, null);
         }
         /// <summary>
-        /// インスタンスプロパティの値を取得します。
+        /// Gets value from a property.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="name"></param>
@@ -232,7 +217,7 @@ namespace Oika.Libs.Merror
             return _GetPropInfo(name, false).GetValue(instance, null);
         }
         /// <summary>
-        /// インスタンスメソッドを実行し、戻り値を返します。
+        /// Calls a method and returns value.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="name"></param>
@@ -244,7 +229,7 @@ namespace Oika.Libs.Merror
             return InvokeExact(instance, name, args.Select(a => new ReflectorParam(a)).ToArray());
         }
         /// <summary>
-        /// 厳密に指定されたパラメータ情報に一致するインスタンスメソッドを実行し、戻り値を返します。
+        /// Calls a method with strictly specified parameters and returns value.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="name"></param>
@@ -266,7 +251,7 @@ namespace Oika.Libs.Merror
         }
 
         /// <summary>
-        /// インデクサにアクセスし、指定したインデクスに値を設定します。
+        /// Sets value to the index of an indexer.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="value"></param>
@@ -277,8 +262,7 @@ namespace Oika.Libs.Merror
             SetIndexerExact(instance, value, indexes.Select(i => new ReflectorParam(i)).ToArray());
         }
         /// <summary>
-        /// 厳密に指定されたパラメータ情報に一致するインデクサにアクセスし、
-        /// 指定したインデクスに値を設定します。
+        /// Sets value to the index of an indexer with strictly specified parameters.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="value"></param>
@@ -290,7 +274,7 @@ namespace Oika.Libs.Merror
             info.SetValue(instance, value, indexes.Select(i => i.Value).ToArray());
         }
         /// <summary>
-        /// インデクサにアクセスし、指定したインデクスの値を取得します。
+        /// Gets value from the index of an indexer.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="indexes"></param>
@@ -301,8 +285,7 @@ namespace Oika.Libs.Merror
             return GetIndexerExact(instance, indexes.Select(i => new ReflectorParam(i)).ToArray());
         }
         /// <summary>
-        /// 厳密に指定されたパラメータ情報に一致するインデクサにアクセスし、
-        /// 指定したインデクスの値を取得します。
+        /// Gets value from the index of an indexer with strictly specified parameters.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="indexes"></param>
@@ -316,13 +299,8 @@ namespace Oika.Libs.Merror
 
         #endregion
 
-        #region プライベートメソッド
+        #region Private methods
 
-        /// <summary>
-        /// インデクサの情報を検索
-        /// </summary>
-        /// <param name="indexTypes"></param>
-        /// <returns></returns>
         private PropertyInfo _GetIndexerInfo(Type[] indexTypes)
         {
             var flg = InstanceFlags;
@@ -332,12 +310,6 @@ namespace Oika.Libs.Merror
             return prop;
         }
 
-        /// <summary>
-        /// プロパティの情報を検索
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="isStatic"></param>
-        /// <returns></returns>
         private PropertyInfo _GetPropInfo(string name, bool isStatic)
         {
             var flg = isStatic ? StaticFlags : InstanceFlags;
@@ -347,12 +319,6 @@ namespace Oika.Libs.Merror
             return prop;
         }
 
-        /// <summary>
-        /// フィールドの情報を検索
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="isStatic"></param>
-        /// <returns></returns>
         private FieldInfo _GetFieldInfo(string name, bool isStatic)
         {
             var flg = isStatic ? StaticFlags : InstanceFlags;
@@ -362,13 +328,6 @@ namespace Oika.Libs.Merror
             return fld;
         }
 
-        /// <summary>
-        /// メソッドの情報を検索
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="paramTypes"></param>
-        /// <param name="isStatic"></param>
-        /// <returns></returns>
         private MethodInfo _GetMethodInfo(string name, Type[] paramTypes, bool isStatic)
         {
             var flg = isStatic ? StaticFlags : InstanceFlags;
