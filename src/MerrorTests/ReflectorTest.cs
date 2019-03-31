@@ -11,6 +11,19 @@ namespace Oika.Libs.MerrorTests
 
         const string NSName = "FooCompany.BarTeam.MerrorTestsTarget";
 
+        [Test]
+        public void ThrowWhenTypeParamIsNull()
+        {
+            try
+            {
+                var refObj = new Reflector(null);
+                Assert.Fail();
+            }
+            catch (ArgumentNullException)
+            {
+            }
+        }
+
         #region Test Constructors
 
         [Test]

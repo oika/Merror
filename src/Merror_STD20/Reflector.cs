@@ -25,9 +25,10 @@ namespace Oika.Libs.Merror
         /// <param name="targetType">Type of the target object.
         /// Use overload with the type name and the assembly info instead if the target class isn't public.
         /// </param>
+        /// <exception cref="ArgumentNullException"></exception>
         public Reflector(Type targetType)
         {
-            this.trgType = targetType;
+            this.trgType = targetType ?? throw new ArgumentNullException(nameof(targetType));
         }
 
         /// <summary>
