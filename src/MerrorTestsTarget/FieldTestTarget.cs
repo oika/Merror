@@ -18,9 +18,13 @@ namespace FooCompany.BarTeam.MerrorTestsTarget
         int dummyNum2;
         static int dummyNum3;
 
-        public FieldTestTarget(int objNum, string staticText)
+        public FieldTestTarget(int objNum)
         {
             num = objNum;
+        }
+
+        public static void SetStaticText(string staticText)
+        {
             text = staticText;
         }
 

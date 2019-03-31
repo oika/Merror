@@ -11,6 +11,13 @@ namespace Oika.Libs.MerrorTests
 
         const string NSName = "FooCompany.BarTeam.MerrorTestsTarget";
 
+        [TearDown]
+        public void TearDown()
+        {
+            FieldTestTarget.SetStaticText(null);
+            PropertyTestTarget.SetStaticText(null);
+        }
+
         [Test]
         public void ThrowWhenTypeParamIsNull()
         {
@@ -64,7 +71,7 @@ namespace Oika.Libs.MerrorTests
         public void TestStaticField()
         {
             var reflector = new Reflector(typeof(FieldTestTarget));
-            var obj = new FieldTestTarget(0, "hoge");
+            FieldTestTarget.SetStaticText("hoge");
 
             Assert.AreEqual("hoge", reflector.GetStaticField("text"));
 
@@ -77,7 +84,7 @@ namespace Oika.Libs.MerrorTests
         public void TestInstanceField()
         {
             var reflector = new Reflector(typeof(FieldTestTarget));
-            var obj = new FieldTestTarget(3333, null);
+            var obj = new FieldTestTarget(3333);
 
             Assert.AreEqual(3333, reflector.GetField(obj, "num"));
 
@@ -90,7 +97,7 @@ namespace Oika.Libs.MerrorTests
         public void ThrowIfFieldTypeUnmatch()
         {
             var reflector = new Reflector(typeof(FieldTestTarget));
-            var obj = new FieldTestTarget(123, "");
+            var obj = new FieldTestTarget(123);
 
             try
             {
@@ -108,7 +115,7 @@ namespace Oika.Libs.MerrorTests
         public void ThrowIfFieldNotFound()
         {
             var reflector = new Reflector(typeof(FieldTestTarget));
-            var obj = new FieldTestTarget(123, "");
+            var obj = new FieldTestTarget(123);
 
             try
             {
@@ -140,7 +147,7 @@ namespace Oika.Libs.MerrorTests
         public void TestStaticProperty()
         {
             var reflector = new Reflector(typeof(PropertyTestTarget));
-            var obj = new PropertyTestTarget(0, "hoge");
+            PropertyTestTarget.SetStaticText("hoge");
 
             Assert.AreEqual("hoge", reflector.GetStaticProperty("Text"));
 
@@ -153,7 +160,7 @@ namespace Oika.Libs.MerrorTests
         public void TestInstanceProperty()
         {
             var reflector = new Reflector(typeof(PropertyTestTarget));
-            var obj = new PropertyTestTarget(3333, null);
+            var obj = new PropertyTestTarget(3333);
 
             Assert.AreEqual(3333, reflector.GetProperty(obj, "Num"));
 
@@ -166,7 +173,7 @@ namespace Oika.Libs.MerrorTests
         public void ThrowIfPropertyTypeUnmatch()
         {
             var reflector = new Reflector(typeof(PropertyTestTarget));
-            var obj = new PropertyTestTarget(123, "");
+            var obj = new PropertyTestTarget(123);
 
             try
             {
@@ -184,7 +191,7 @@ namespace Oika.Libs.MerrorTests
         public void TestIfPropertyNotFound()
         {
             var reflector = new Reflector(typeof(PropertyTestTarget));
-            var obj = new PropertyTestTarget(123, "");
+            var obj = new PropertyTestTarget(123);
 
             try
             {
